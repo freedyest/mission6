@@ -1,13 +1,25 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import NavButton from "../components/NavButton.jsx";
-import { courses } from "../data/courses";
 import VideoCard from "../components/VideoCard";
-import { useState } from "react";
 import FilterNav from "../components/FilterNav.jsx";
+import CourseModal from "../components/coursemodal.jsx";
+import { homehook } from "../hooks/homehook.jsx";
 function Home() {
-  const [filter, setFilter] = useState("all");
+  const {
+    filter,
+    setFilter,
+    filteredCourses,
+    isModalOpen,
+    setIsModalOpen,
+    editingCourse,
+    handleCreate,
+    handleEdit,
+    handleSave,
+    handleDelete,
+  } = homehook();
 
   const categories = [
     { key: "all", label: "Semua Kelas" },
@@ -16,6 +28,7 @@ function Home() {
     { key: "pengembangan", label: "Pengembangan Diri" },
     { key: "bisnis", label: "Bisnis" },
   ];
+
   return (
     <div className="">
       <div className="px-2 md:px-20 bg-[#FFFDF3]">
@@ -62,31 +75,38 @@ function Home() {
         </section>
 
         {/* <!--mininav--> */}
-
         <FilterNav categories={categories} onFilterChange={setFilter} />
+
+        {/* Tombol create */}
+        <div className="my-6">
+          <button
+            onClick={handleCreate}
+            className="px-4 py-2 bg-[#F64920] font-semibold text-white rounded hover:bg-white hover:text-[#F64920]"
+          >
+            + Create Course
+          </button>
+        </div>
 
         {/* <!--video course--> */}
         <section id="videocourse" className="w-full mt-10">
           <div className="w-full md:flex flex-wrap justify-evenly gap-6">
-            {courses
-              .filter(
-                (course) => filter === "all" || course.category === filter
-              )
-              .map((course, index) => (
-                <VideoCard
-                  key={`${course.id}`}
-                  image={course.image}
-                  title={course.title}
-                  description={course.desc}
-                  avatar={course.avatar}
-                  name={course.instructor}
-                  role={course.role}
-                  company={course.company}
-                  rating={course.rating}
-                  review={course.reviews}
-                  price={course.price}
-                />
-              ))}
+            {filteredCourses.map((course) => (
+              <VideoCard
+                key={course.id}
+                image={course.image}
+                title={course.title}
+                description={course.desc}
+                avatar={course.avatar}
+                name={course.instructor}
+                role={course.role}
+                company={course.company}
+                rating={course.rating}
+                review={course.reviews}
+                price={course.price}
+                onEdit={() => handleEdit(course)}
+                onDelete={() => handleDelete(course.id)}
+              />
+            ))}
           </div>
         </section>
 
@@ -127,6 +147,15 @@ function Home() {
 
       {/* <!--footer--> */}
       <Footer />
+
+      {/* Modal */}
+      {/* Modal */}
+      <CourseModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSave} // <-- pakai handleSave yang sudah dibuat
+        initialData={editingCourse}
+      />
     </div>
   );
 }

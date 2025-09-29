@@ -9,14 +9,15 @@ function VideoCard({
   rating,
   review,
   price,
+  onEdit,
+  onDelete,
 }) {
-  // generate star
+  // generate star (tetap sama)
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalf = rating % 1 !== 0;
 
-    // bintang penuh
     for (let i = 0; i < fullStars; i++) {
       stars.push(
         <svg
@@ -31,7 +32,6 @@ function VideoCard({
       );
     }
 
-    // bintang setengah
     if (hasHalf) {
       stars.push(
         <svg
@@ -55,7 +55,6 @@ function VideoCard({
       );
     }
 
-    // bintang kosong
     while (stars.length < 5) {
       stars.push(
         <svg
@@ -75,7 +74,7 @@ function VideoCard({
   };
 
   return (
-    <div className="containervideo desain border p-3 rounded-lg shadow-sm">
+    <div className="containervideo desain border p-3 rounded-lg shadow-sm relative">
       {/* gambar utama */}
       <img
         src={image}
@@ -92,7 +91,7 @@ function VideoCard({
           <img
             src={avatar}
             alt={name}
-            className="avatarimg rounded-lg w-1/5 md:h-12 md:w-auto  object-cover"
+            className="avatarimg rounded-lg w-1/5 md:h-12 md:w-auto object-cover"
           />
           <div className="w-4/5 p-2">
             <h4 className="font-semibold">{name}</h4>
@@ -110,13 +109,30 @@ function VideoCard({
           <div className="rating flex gap-1 mr-4">
             {renderStars(parseFloat(rating))}
           </div>
-          <span className="review text-gray-600 text-sm  ">
+          <span className="review text-gray-600 text-sm">
             {rating} ({review})
           </span>
         </div>
         <span className="price font-bold ml-auto text-green-600 text-lg">
           {price}
         </span>
+      </div>
+      {/* tombol edit & delete */}
+      <div className="flex w-full justify-end">
+        <div className="flex w-1/4 justify-between h-8">
+          <button
+            onClick={onEdit}
+            className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+          >
+            Edit
+          </button>
+          <button
+            onClick={onDelete}
+            className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

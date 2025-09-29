@@ -3,8 +3,14 @@ import Header from "../components/Header.jsx";
 import eyesOff from "../assets/eyesoff.png";
 import eyesOn from "../assets/eyeson.png";
 import NavButton from "../components/NavButton.jsx";
+import { useState } from "react";
 function Login() {
   const navigate = useNavigate();
+
+  //stateform
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
