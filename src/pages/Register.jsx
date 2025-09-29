@@ -7,11 +7,7 @@ import NavButton from "../components/NavButton";
 
 function Register() {
   const navigate = useNavigate();
-  //handle register
-  const handleRegister = (e) => {
-    e.preventDefault();
-    navigate("/login");
-  };
+
   // State untuk password
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -34,10 +30,39 @@ function Register() {
     setDropdownOpen(false);
   };
 
+  // handle register
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    const nama = document.getElementById("nama").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phonenumber").value;
+    const password = document.getElementById("password").value;
+    const confirm = document.getElementById("confirm").value;
+
+    // Validasi sederhana
+    if (!nama || !email || !phone || !password || !confirm) {
+      alert("Semua field wajib diisi!");
+      return;
+    }
+
+    if (password !== confirm) {
+      alert("Password dan konfirmasi tidak sama!");
+      return;
+    }
+
+    // Simpan data ke localStorage
+    const userData = { nama, email, phone, password };
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    alert("Registrasi berhasil! Silakan login.");
+    navigate("/login");
+  };
+
   return (
     <div className="bg-[#FFFDF3]">
       {/* Header */}
-      <Header></Header>
+      <Header />
 
       {/* Main section */}
       <section
@@ -224,7 +249,7 @@ function Register() {
 
             <div>
               <NavButton
-                onClick={handleRegister}
+                onClick={() => navigate("/login")}
                 variant="secondary"
                 className="mb-6"
               >

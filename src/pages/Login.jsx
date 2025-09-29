@@ -4,41 +4,43 @@ import eyesOff from "../assets/eyesoff.png";
 import eyesOn from "../assets/eyeson.png";
 import NavButton from "../components/NavButton.jsx";
 import { useState } from "react";
+
 function Login() {
   const navigate = useNavigate();
 
-  //stateform
+  // state form
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // handle login
   const handleLogin = (e) => {
     e.preventDefault();
-    navigate("/Home");
+
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!savedUser) {
+      alert("Belum ada akun terdaftar. Silakan register dulu.");
+      return;
+    }
+
+    if (email === savedUser.email && password === savedUser.password) {
+      alert("Login berhasil!");
+      navigate("/Home");
+    } else {
+      alert("Email atau password salah!");
+    }
   };
 
+  // pindah ke register
   const handleRegister = (e) => {
     e.preventDefault();
     navigate("/Register");
   };
 
-  const togglePassword = () => {
-    const input = document.getElementById("password");
-    const icon = document.getElementById("iconPassword");
-
-    if (input.type === "password") {
-      input.type = "text";
-      icon.src = eyesOn; // ✅ pakai import
-    } else {
-      input.type = "password";
-      icon.src = eyesOff; // ✅ pakai import
-    }
-  };
-
   return (
     <div className="bg-[#FFFDF3]">
-      {/* <header></header> */}
-      <Header> </Header>
+      <Header />
       <section
         id="loginform"
         className="min-h-screen flex items-center justify-center py-32 md:py-36"
@@ -61,6 +63,8 @@ function Login() {
               <input
                 type="email"
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               />
@@ -76,14 +80,19 @@ function Login() {
               </label>
               <div className="flex justify-between w-full border border-gray-300 rounded-md shadow-sm">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="flex-1 px-3 py-2 focus:outline-none rounded-l-md"
                 />
-                <button type="button" onClick={togglePassword} className="px-3">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="px-3"
+                >
                   <img
-                    id="iconPassword"
-                    src={eyesOff} // ✅ default icon
+                    src={showPassword ? eyesOn : eyesOff}
                     alt="toggle password"
                     className="w-5 h-5"
                   />
@@ -91,13 +100,14 @@ function Login() {
               </div>
             </div>
 
+            {/* Lupa password */}
             <div className="mb-5 text-end">
               <a href="#" className="text-darkgray hover:underline text-md">
                 Lupa password?
               </a>
             </div>
 
-            {/* button */}
+            {/* Tombol */}
             <div>
               <NavButton
                 onClick={handleLogin}
