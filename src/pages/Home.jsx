@@ -149,11 +149,10 @@ function Home() {
       <Footer />
 
       {/* Modal */}
-      {/* Modal */}
       <CourseModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSave={handleSave} // <-- pakai handleSave yang sudah dibuat
+        onSave={handleSave} // <-- handleSave
         initialData={editingCourse}
       />
     </div>
