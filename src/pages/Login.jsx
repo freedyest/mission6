@@ -17,15 +17,23 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const savedUser = JSON.parse(localStorage.getItem("user"));
+    // ambil semua user
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    if (!savedUser) {
+    if (users.length === 0) {
       alert("Belum ada akun terdaftar. Silakan register dulu.");
       return;
     }
 
-    if (email === savedUser.email && password === savedUser.password) {
-      alert("Login berhasil!");
+    // cari user berdasarkan email & password
+    const foundUser = users.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (foundUser) {
+      alert(`Login berhasil! Selamat datang ${foundUser.nama}`);
+      // bisa simpan user aktif ke localStorage
+      localStorage.setItem("currentUser", JSON.stringify(foundUser));
       navigate("/Home");
     } else {
       alert("Email atau password salah!");
@@ -51,7 +59,7 @@ function Login() {
             Yuk, lanjutin belajarmu di videobelajar.
           </h2>
 
-          <div className="mt-8">
+          <form onSubmit={handleLogin} className="mt-8">
             {/* Email */}
             <div className="mb-5 text-start">
               <label
@@ -85,6 +93,7 @@ function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="flex-1 px-3 py-2 focus:outline-none rounded-l-md"
+                  required
                 />
                 <button
                   type="button"
@@ -109,17 +118,14 @@ function Login() {
 
             {/* Tombol */}
             <div>
-              <NavButton
-                onClick={handleLogin}
-                variant="primary"
-                className="mb-8"
-              >
+              <NavButton type="submit" variant="primary" className="mb-8">
                 Masuk
               </NavButton>
             </div>
 
             <div>
               <NavButton
+                type="button"
                 onClick={handleRegister}
                 variant="secondary"
                 className="mb-6"
@@ -143,7 +149,7 @@ function Login() {
               />
               <span>Masuk dengan Google</span>
             </button>
-          </div>
+          </form>
         </div>
       </section>
     </div>

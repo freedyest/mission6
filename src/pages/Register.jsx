@@ -8,11 +8,18 @@ import NavButton from "../components/NavButton";
 function Register() {
   const navigate = useNavigate();
 
-  // State untuk password
+  // State form
+  const [nama, setNama] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+
+  // Toggle show/hide
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // State dropdown
+  // Negara
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState({
     flag: "https://flagcdn.com/w20/id.png",
@@ -30,30 +37,39 @@ function Register() {
     setDropdownOpen(false);
   };
 
-  // handle register
+  // Handle register
   const handleRegister = (e) => {
     e.preventDefault();
-
-    const nama = document.getElementById("nama").value;
-    const email = document.getElementById("email").value;
-    const phone = document.getElementById("phonenumber").value;
-    const password = document.getElementById("password").value;
-    const confirm = document.getElementById("confirm").value;
 
     // Validasi sederhana
     if (!nama || !email || !phone || !password || !confirm) {
       alert("Semua field wajib diisi!");
       return;
     }
-
     if (password !== confirm) {
       alert("Password dan konfirmasi tidak sama!");
       return;
     }
 
-    // Simpan data ke localStorage
-    const userData = { nama, email, phone, password };
-    localStorage.setItem("user", JSON.stringify(userData));
+    // Ambil data lama
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Cek email duplikat
+    const userExists = users.find((u) => u.email === email);
+    if (userExists) {
+      alert("Email sudah terdaftar!");
+      return;
+    }
+
+    // Simpan user baru
+    const newUser = {
+      nama,
+      email,
+      phone: `${selectedCountry.code}${phone}`,
+      password,
+    };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
 
     alert("Registrasi berhasil! Silakan login.");
     navigate("/login");
@@ -61,10 +77,8 @@ function Register() {
 
   return (
     <div className="bg-[#FFFDF3]">
-      {/* Header */}
       <Header />
 
-      {/* Main section */}
       <section
         id="Register"
         className="min-h-screen flex items-center justify-center py-36"
@@ -75,60 +89,49 @@ function Register() {
             Yuk, daftarkan akunmu sekarang juga!
           </h2>
 
-          <div className="mt-8">
+          <form onSubmit={handleRegister} className="mt-8">
             {/* Nama */}
             <div className="mb-5 text-start">
-              <label
-                htmlFor="nama"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Nama Lengkap <span className="text-red-600">*</span>
+              <label htmlFor="nama">
+                Nama Lengkap <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 id="nama"
-                name="nama"
+                value={nama}
+                onChange={(e) => setNama(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border rounded-md"
                 required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             {/* Email */}
             <div className="mb-5 text-start">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email <span className="text-red-600">*</span>
+              <label htmlFor="email">
+                Email <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 id="email"
-                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border rounded-md"
                 required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
-            {/* Phone number */}
+            {/* Phone */}
             <div className="mb-5 text-start">
-              <label
-                htmlFor="phonenumber"
-                className="block text-sm font-medium text-gray-700"
-              >
-                No. HP <span className="text-red-600">*</span>
+              <label htmlFor="phonenumber">
+                No. HP <span className="text-red-500">*</span>
               </label>
               <div className="flex relative">
                 <button
                   type="button"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center border border-gray-300 rounded-l-md px-2 py-2 bg-white mr-8"
+                  className="flex items-center border rounded-l-md px-2 py-2 bg-white mr-8"
                 >
-                  <img
-                    src={selectedCountry.flag}
-                    alt="flag"
-                    className="w-5 h-4 mr-2"
-                  />
+                  <img src={selectedCountry.flag} className="w-5 h-4 mr-2" />
                   {selectedCountry.code}
                   <svg
                     className={`w-10 h-10 ml-1 transform transition-transform duration-200 ${
@@ -148,14 +151,14 @@ function Register() {
                 </button>
 
                 {dropdownOpen && (
-                  <ul className="absolute left-0 top-full mt-1 bg-white border border-gray-300 rounded-md shadow-md z-10">
+                  <ul className="absolute left-0 top-full mt-1 bg-white border rounded-md shadow-md z-10">
                     {countries.map((c, i) => (
                       <li
                         key={i}
                         className="px-3 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
                         onClick={() => handleSelectCountry(c)}
                       >
-                        <img src={c.flag} alt="flag" className="w-5 h-4 mr-2" />
+                        <img src={c.flag} className="w-5 h-4 mr-2" />
                         {c.code}
                       </li>
                     ))}
@@ -165,27 +168,27 @@ function Register() {
                 <input
                   type="tel"
                   id="phonenumber"
-                  name="phonenumber"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="block w-full px-3 py-2 border rounded-r-md"
                   required
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-r-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div className="mb-5 text-start">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Kata Sandi <span className="text-red-600">*</span>
+              <label htmlFor="password">
+                Kata Sandi <span className="text-red-500">*</span>
               </label>
-              <div className="flex justify-between w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500">
+              <div className="flex border rounded-md">
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  name="password"
-                  className="flex-1 px-3 py-2 focus:outline-none rounded-l-md"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="flex-1 px-3 py-2"
+                  required
                 />
                 <button
                   type="button"
@@ -194,7 +197,7 @@ function Register() {
                 >
                   <img
                     src={showPassword ? eyesOn : eyesOff}
-                    alt="toggle password"
+                    alt="toggle"
                     className="w-5 h-5"
                   />
                 </button>
@@ -203,18 +206,17 @@ function Register() {
 
             {/* Konfirmasi Password */}
             <div className="mb-5 text-start">
-              <label
-                htmlFor="confirm"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Konfirmasi Kata Sandi <span className="text-red-600">*</span>
+              <label htmlFor="confirm">
+                Konfirmasi Kata Sandi <span className="text-red-500">*</span>
               </label>
-              <div className="flex justify-between w-full items-center border border-gray-300 rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500">
+              <div className="flex border rounded-md">
                 <input
                   type={showConfirm ? "text" : "password"}
                   id="confirm"
-                  name="confirm"
-                  className="flex-1 px-3 py-2 focus:outline-none rounded-l-md"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  className="flex-1 px-3 py-2"
+                  required
                 />
                 <button
                   type="button"
@@ -231,48 +233,18 @@ function Register() {
             </div>
 
             {/* Tombol */}
-            <div className="mb-5 text-end">
-              <a href="#" className="text-darkgray hover:underline text-md">
-                Lupa password?
-              </a>
-            </div>
+            <NavButton type="submit" variant="primary" className="mb-6">
+              Register
+            </NavButton>
 
-            <div>
-              <NavButton
-                onClick={handleRegister}
-                variant="primary"
-                className="mb-6"
-              >
-                Register
-              </NavButton>
-            </div>
-
-            <div>
-              <NavButton
-                onClick={() => navigate("/login")}
-                variant="secondary"
-                className="mb-6"
-              >
-                Login
-              </NavButton>
-            </div>
-
-            {/* Atau */}
-            <div className="flex items-center my-6">
-              <hr className="flex-grow border-gray-300" />
-              <span className="px-3 text-gray-500 text-sm">atau</span>
-              <hr className="flex-grow border-gray-300" />
-            </div>
-
-            <button className="flex justify-center items-center w-full font-bold bg-white text-darkgray py-2 px-4 rounded-md hover:bg-slate-400 border border-darkgray">
-              <img
-                src={`${import.meta.env.BASE_URL}google.png`}
-                alt="Google"
-                className="h-10 w-10 mr-2"
-              />
-              <span>Daftar dengan Google</span>
-            </button>
-          </div>
+            <NavButton
+              type="button"
+              onClick={() => navigate("/login")}
+              variant="secondary"
+            >
+              Login
+            </NavButton>
+          </form>
         </div>
       </section>
     </div>
