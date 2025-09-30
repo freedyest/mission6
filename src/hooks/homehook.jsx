@@ -1,4 +1,3 @@
-// src/hooks/useCourses.js
 import { useState, useMemo } from "react";
 import { courses as initialCourses } from "../data/courses";
 
@@ -8,7 +7,7 @@ export function homehook() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
 
-  // Filtered courses (pakai useMemo biar lebih optimal)
+  // Filtered courses
   const filteredCourses = useMemo(() => {
     return filter === "all"
       ? courseList
