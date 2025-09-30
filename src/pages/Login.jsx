@@ -17,7 +17,7 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // ambil semua user
+    // take all user
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     if (users.length === 0) {
@@ -25,14 +25,14 @@ function Login() {
       return;
     }
 
-    // cari user berdasarkan email & password
+    // search user by email & password
     const foundUser = users.find(
       (u) => u.email === email && u.password === password
     );
 
     if (foundUser) {
       alert(`Login berhasil! Selamat datang ${foundUser.nama}`);
-      // bisa simpan user aktif ke localStorage
+      //  simpan user aktif ke localStorage
       localStorage.setItem("currentUser", JSON.stringify(foundUser));
       navigate("/Home");
     } else {
@@ -40,7 +40,7 @@ function Login() {
     }
   };
 
-  // pindah ke register
+  // register
   const handleRegister = (e) => {
     e.preventDefault();
     navigate("/Register");
@@ -109,7 +109,7 @@ function Login() {
               </div>
             </div>
 
-            {/* Lupa password */}
+            {/* forget password */}
             <div className="mb-5 text-end">
               <a href="#" className="text-darkgray hover:underline text-md">
                 Lupa password?

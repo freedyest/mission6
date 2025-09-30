@@ -41,7 +41,7 @@ function Register() {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    // Validasi sederhana
+    // Validate
     if (!nama || !email || !phone || !password || !confirm) {
       alert("Semua field wajib diisi!");
       return;
@@ -51,7 +51,7 @@ function Register() {
       return;
     }
 
-    // Ambil data lama
+    // take old data
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     // Cek email duplikat
@@ -61,7 +61,7 @@ function Register() {
       return;
     }
 
-    // Simpan user baru
+    // save user
     const newUser = {
       nama,
       email,
@@ -204,7 +204,7 @@ function Register() {
               </div>
             </div>
 
-            {/* Konfirmasi Password */}
+            {/* confirm Password */}
             <div className="mb-5 text-start">
               <label htmlFor="confirm">
                 Konfirmasi Kata Sandi <span className="text-red-500">*</span>
