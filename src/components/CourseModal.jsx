@@ -85,7 +85,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
             value={form.desc}
             onChange={handleChange}
             placeholder="Description"
-            className="border p-2 rounded h-30"
+            className="border p-2 rounded min-h-32"
             rows="3"
           />
 
