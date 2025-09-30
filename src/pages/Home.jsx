@@ -5,7 +5,7 @@ import Footer from "../components/Footer.jsx";
 import NavButton from "../components/NavButton.jsx";
 import VideoCard from "../components/VideoCard";
 import FilterNav from "../components/FilterNav.jsx";
-import CourseModal from "../components/coursemodal.jsx";
+import CourseModal from "../components/CourseModal.jsx";
 import { homehook } from "../hooks/homehook.jsx";
 function Home() {
   const {
