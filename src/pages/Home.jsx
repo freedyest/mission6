@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
@@ -7,6 +6,7 @@ import VideoCard from "../components/VideoCard";
 import FilterNav from "../components/FilterNav.jsx";
 import CourseModal from "../components/CourseModal.jsx";
 import { homehook } from "../hooks/homehook.jsx";
+
 function Home() {
   const {
     filter,
@@ -21,6 +21,10 @@ function Home() {
     handleDelete,
   } = homehook();
 
+  // ✅ Ambil user yang bener dari localStorage
+  const storedUser = localStorage.getItem("currentUser");
+  const currentUser = storedUser ? JSON.parse(storedUser) : null;
+
   const categories = [
     { key: "all", label: "Semua Kelas" },
     { key: "pemasaran", label: "Pemasaran" },
@@ -30,12 +34,12 @@ function Home() {
   ];
 
   return (
-    <div className="">
+    <div>
       <div className="px-2 md:px-20 bg-[#FFFDF3]">
-        {/* <!--header--> */}
+        {/* header */}
         <Header withUserMenu={true} />
 
-        {/* <!--spot--> */}
+        {/* spotlight */}
         <section id="spotlight" className="pt-28 md:pt-36 bg-white rounded-lg">
           <div className="relative w-full h-[500px] md:h-80 flex items-center justify-center rounded-lg">
             <img
@@ -62,7 +66,7 @@ function Home() {
           </div>
         </section>
 
-        {/* <!--headmenu--> */}
+        {/* headmenu */}
         <section id="headmenu" className="pt-14 bg-lightgray px-2">
           <div className="w-full">
             <h2 className="text-black text-3xl font-bold">
@@ -74,20 +78,22 @@ function Home() {
           </div>
         </section>
 
-        {/* <!--mininav--> */}
+        {/* filter nav */}
         <FilterNav categories={categories} onFilterChange={setFilter} />
 
-        {/* Tombol create */}
-        <div className="my-6">
-          <button
-            onClick={handleCreate}
-            className="px-4 py-2 bg-[#F64920] font-semibold text-white rounded hover:bg-white hover:text-[#F64920]"
-          >
-            + Create Course
-          </button>
-        </div>
+        {/* tombol create → hanya muncul kalau ada user login */}
+        {currentUser?.email && (
+          <div className="my-6">
+            <button
+              onClick={handleCreate}
+              className="px-4 py-2 bg-[#F64920] font-semibold text-white rounded hover:bg-white hover:text-[#F64920]"
+            >
+              + Create Course
+            </button>
+          </div>
+        )}
 
-        {/* <!--video course--> */}
+        {/* video course */}
         <section id="videocourse" className="w-full mt-10">
           <div className="w-full md:flex flex-wrap justify-evenly gap-6">
             {filteredCourses.map((course) => (
@@ -103,14 +109,14 @@ function Home() {
                 rating={course.rating}
                 review={course.reviews}
                 price={course.price}
-                onEdit={() => handleEdit(course)}
-                onDelete={() => handleDelete(course.id)}
+                onEdit={currentUser ? () => handleEdit(course) : null}
+                onDelete={currentUser ? () => handleDelete(course.id) : null}
               />
             ))}
           </div>
         </section>
 
-        {/* <!--news--> */}
+        {/* newsletter */}
         <section id="newsletter" className=" bg-black">
           <div className="relative w-full h-auto flex items-center justify-center">
             <img
@@ -145,14 +151,14 @@ function Home() {
         </section>
       </div>
 
-      {/* <!--footer--> */}
+      {/* footer */}
       <Footer />
 
-      {/* Modal */}
+      {/* modal */}
       <CourseModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSave={handleSave} // <-- handleSave
+        onSave={handleSave}
         initialData={editingCourse}
       />
     </div>

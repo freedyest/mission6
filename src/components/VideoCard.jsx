@@ -118,22 +118,24 @@ function VideoCard({
         </span>
       </div>
       {/* tombol edit & delete */}
-      <div className="flex w-full justify-end">
-        <div className="flex w-1/4 justify-between h-8">
-          <button
-            onClick={onEdit}
-            className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-          >
-            Edit
-          </button>
-          <button
-            onClick={onDelete}
-            className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
-          >
-            Delete
-          </button>
+      {onEdit && onDelete && (
+        <div className="flex w-full justify-end">
+          <div className="flex w-1/4 justify-between h-8">
+            <button
+              onClick={onEdit}
+              className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+            >
+              Edit
+            </button>
+            <button
+              onClick={onDelete}
+              className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+            >
+              Delete
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
