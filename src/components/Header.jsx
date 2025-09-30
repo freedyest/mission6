@@ -153,7 +153,7 @@ function Header({ withUserMenu = false }) {
                       variant="primary"
                       className=" "
                     >
-                      login
+                      Login
                     </NavButton>
                   </li>
                   <li className="w-full px-4 py-2">
@@ -163,7 +163,7 @@ function Header({ withUserMenu = false }) {
                       variant="secondary"
                       className=""
                     >
-                      login
+                      Register
                     </NavButton>
                   </li>
                 </>
