@@ -12,13 +12,12 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
     rating: 0,
     review: 0,
     price: "",
+    category: "", // tambahin field category
   });
 
-  // mode input (url / upload)
   const [imageMode, setImageMode] = useState("url");
   const [avatarMode, setAvatarMode] = useState("url");
 
-  // initial data
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
@@ -34,6 +33,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
         rating: 0,
         review: 0,
         price: "",
+        category: "", // reset juga
       });
     }
   }, [initialData]);
@@ -46,7 +46,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
-      const url = URL.createObjectURL(file); // buat preview
+      const url = URL.createObjectURL(file);
       setForm({ ...form, [field]: url });
     }
   };
@@ -58,6 +58,9 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
   };
 
   if (!isOpen) return null;
+
+  // daftar kategori
+  const categories = ["desain", "pengembangan", "bisnis", "pemasaran"];
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
@@ -82,12 +85,29 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
           <p>Description</p>
           <textarea
             name="description"
-            value={form.desc}
+            value={form.description}
             onChange={handleChange}
             placeholder="Description"
             className="border p-2 rounded min-h-32"
             rows="3"
           />
+
+          {/* Category Dropdown */}
+          <p>Category</p>
+          <select
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          >
+            <option value="">-- Pilih Category --</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
 
           {/* Image field */}
           <p>Image</p>
@@ -180,7 +200,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
           <p>Nama</p>
           <input
             name="name"
-            value={form.instructor}
+            value={form.name}
             onChange={handleChange}
             placeholder="Instructor Name"
             className="border p-2 rounded"
@@ -215,7 +235,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
           <input
             name="review"
             type="number"
-            value={form.reviews}
+            value={form.review}
             onChange={handleChange}
             placeholder="Review Count"
             className="border p-2 rounded"
@@ -229,7 +249,6 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
             className="border p-2 rounded"
           />
 
-          {/* tombol */}
           <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
