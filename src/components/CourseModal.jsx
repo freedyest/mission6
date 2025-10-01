@@ -12,7 +12,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
     rating: 0,
     review: 0,
     price: "",
-    category: "", // tambahin field category
+    category: "",
   });
 
   const [imageMode, setImageMode] = useState("url");
@@ -33,7 +33,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
         rating: 0,
         review: 0,
         price: "",
-        category: "", // reset juga
+        category: "",
       });
     }
   }, [initialData]);
@@ -59,7 +59,7 @@ function CourseModal({ isOpen, onClose, onSave, initialData }) {
 
   if (!isOpen) return null;
 
-  // daftar kategori
+  //  list category
   const categories = ["desain", "pengembangan", "bisnis", "pemasaran"];
 
   return (
